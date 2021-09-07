@@ -24,6 +24,7 @@ import de.digitalcollections.cudami.client.identifiable.resource.CudamiFileResou
 import de.digitalcollections.cudami.client.identifiable.web.CudamiWebpagesClient;
 import de.digitalcollections.cudami.client.relation.CudamiPredicatesClient;
 import de.digitalcollections.cudami.client.security.CudamiUsersClient;
+import de.digitalcollections.cudami.client.semantic.CudamiHeadwordsClient;
 import de.digitalcollections.cudami.client.view.CudamiRenderingTemplatesClient;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
@@ -32,7 +33,6 @@ import java.time.Duration;
 
 public class CudamiClient {
 
-  protected final HttpClient http;
   private final CudamiArticlesClient cudamiArticlesClient;
   private final CudamiCollectionsClient cudamiCollectionsClient;
   private final CudamiCorporateBodiesClient cudamiCorporateBodiesClient;
@@ -44,6 +44,7 @@ public class CudamiClient {
   private final CudamiFileResourcesMetadataClient cudamiFileResourcesMetadataClient;
   private final CudamiGeoLocationsClient cudamiGeoLocationsClient;
   private final CudamiGivenNamesClient cudamiGivenNamesClient;
+  private final CudamiHeadwordsClient cudamiHeadwordsClient;
   private final CudamiHumanSettlementsClient cudamiHumanSettlementsClient;
   private final CudamiIdentifiablesClient cudamiIdentifiablesClient;
   private final CudamiIdentifierTypesClient cudamiIdentifierTypesClient;
@@ -58,6 +59,7 @@ public class CudamiClient {
   private final CudamiWebpagesClient cudamiWebpagesClient;
   private final CudamiWebsitesClient cudamiWebsitesClient;
   private final CudamiWorksClient cudamiWorksClient;
+  protected final HttpClient http;
 
   public CudamiClient(String cudamiServerUrl, ObjectMapper mapper) {
     this(
@@ -87,6 +89,7 @@ public class CudamiClient {
         new CudamiFileResourcesMetadataClient(http, cudamiServerUrl, mapper);
     this.cudamiGeoLocationsClient = new CudamiGeoLocationsClient(http, cudamiServerUrl, mapper);
     this.cudamiGivenNamesClient = new CudamiGivenNamesClient(http, cudamiServerUrl, mapper);
+    this.cudamiHeadwordsClient = new CudamiHeadwordsClient(http, cudamiServerUrl, mapper);
     this.cudamiHumanSettlementsClient =
         new CudamiHumanSettlementsClient(http, cudamiServerUrl, mapper);
     this.cudamiIdentifiablesClient = new CudamiIdentifiablesClient(http, cudamiServerUrl, mapper);
@@ -148,6 +151,10 @@ public class CudamiClient {
 
   public CudamiGivenNamesClient forGivenNames() {
     return cudamiGivenNamesClient;
+  }
+
+  public CudamiHeadwordsClient forHeadwords() {
+    return cudamiHeadwordsClient;
   }
 
   public CudamiHumanSettlementsClient forHumanSettlements() {

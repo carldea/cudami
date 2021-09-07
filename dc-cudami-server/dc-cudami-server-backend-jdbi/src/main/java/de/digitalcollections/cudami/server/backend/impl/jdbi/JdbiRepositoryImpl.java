@@ -1,6 +1,8 @@
 package de.digitalcollections.cudami.server.backend.impl.jdbi;
 
 import de.digitalcollections.cudami.server.backend.impl.database.AbstractPagingAndSortingRepositoryImpl;
+import java.util.UUID;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
 public abstract class JdbiRepositoryImpl extends AbstractPagingAndSortingRepositoryImpl {
@@ -33,5 +35,27 @@ public abstract class JdbiRepositoryImpl extends AbstractPagingAndSortingReposit
 
   public String getTableName() {
     return tableName;
+  }
+
+  protected Integer retrieveNextSortIndexForParentChildren(
+      Jdbi dbi, String tableName, String columNameParentUuid, UUID parentUuid) {
+    // first child: max gets no results (= null)):
+    Integer sortIndex =
+        dbi.withHandle(
+            (Handle h) ->
+                h.createQuery(
+                        "SELECT MAX(sortIndex) + 1 FROM "
+                            + tableName
+                            + " WHERE "
+                            + columNameParentUuid
+                            + " = :parent_uuid")
+                    .bind("parent_uuid", parentUuid)
+                    .mapTo(Integer.class)
+                    .findOne()
+                    .orElse(null));
+    if (sortIndex == null) {
+      return 0;
+    }
+    return sortIndex;
   }
 }
